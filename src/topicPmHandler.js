@@ -1189,11 +1189,6 @@ export async function unbanTopic(botToken, ownerUid, message, topicToFromChat, m
 // ---------------------------------------- FIX SETTING ----------------------------------------
 
 export async function fixPinMessage(botToken, chatId, text, oldPinMsgId) {
-  await postToTelegramApi(botToken, 'unpinChatMessage', {
-    chat_id: chatId,
-    message_id: oldPinMsgId,
-  });
-
   const sendMessageResp = await (await postToTelegramApi(botToken, 'sendMessage', {
     chat_id: chatId,
     text: text,
@@ -1202,6 +1197,10 @@ export async function fixPinMessage(botToken, chatId, text, oldPinMsgId) {
     await postToTelegramApi(botToken, 'pinChatMessage', {
       chat_id: chatId,
       message_id: sendMessageResp.result.message_id,
+    });
+    await postToTelegramApi(botToken, 'unpinChatMessage', {
+      chat_id: chatId,
+      message_id: oldPinMsgId,
     });
   }
 }
